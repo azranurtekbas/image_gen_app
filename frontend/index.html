@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Görüntü Stüdyosu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/style.css">
+</head>
+<body>
+  <div class="app-tabs" role="tablist" aria-label="Üretim türü">
+    <button class="app-tab active" type="button" data-tab="image" role="tab" aria-selected="true">Görsel Üret</button>
+    <button class="app-tab" type="button" data-tab="video" role="tab" aria-selected="false">Video Üret</button>
+  </div>
+
+  <div id="imagePanel" class="app-panel active">
+    <main class="studio">
+      <header class="hero"><span>YARATICI YAPAY ZEKÂ</span><h1>AI Görüntü Stüdyosu</h1><p>Modeli seç, fikrini yaz, görselini üret.</p></header>
+      <section class="studio-grid">
+        <section class="panel">
+          <div class="section-heading"><b>01</b><div><h2>Model ve fikir</h2><p>Her fal.ai modelini hızla deneyin.</p></div></div>
+          <label>Model</label>
+          <div class="model-picker"><button type="button" class="model-picker-trigger" id="modelTrigger"><span id="modelTriggerLabel">Model seçin</span><span class="model-picker-arrow">▾</span></button><ul class="model-picker-list" id="modelList" hidden></ul></div>
+          <div id="custom-model-form" class="custom-model-form is-hidden"><label for="custom-endpoint">Endpoint ID</label><input id="custom-endpoint" placeholder="fal-ai/qwen-image-edit"><label><input id="custom-reference-enabled" type="checkbox"> Referans görsel destekliyor</label><label for="custom-reference-param">Referans parametresi</label><input id="custom-reference-param" value="image_urls"><label for="custom-size-param">Boyut/oran parametresi</label><input id="custom-size-param" placeholder="image_size veya aspect_ratio"></div>
+          <label for="prompt">Prompt</label><textarea id="prompt" rows="6" placeholder="Ne üretmek istersin?"></textarea>
+          <div id="aspect-section" class="aspect-section"><span class="aspect-label">Görsel oranı</span><div id="aspect-options" class="aspect-options"></div></div>
+          <div class="section-heading reference-heading"><b>02</b><div><h2>Referans ekle <small>Opsiyonel</small></h2><p>Modelin desteklediği görsel referans.</p></div></div>
+          <label id="drop-zone" class="drop-zone" for="reference-input"><input id="reference-input" type="file" accept="image/*" hidden><i>↥</i><strong>Görseli buraya bırak</strong><span>veya dosya seçmek için tıkla</span></label>
+          <div id="reference-preview" class="reference-preview is-hidden"><img id="reference-image" alt="Referans"><div><span id="reference-name"></span><span id="upload-status"></span></div><button id="remove-reference" type="button">×</button></div>
+          <p id="form-error" class="error-message" role="alert" hidden></p><button id="generate-button" class="generate-button" type="button">✦ Görüntü Üret</button>
+        </section>
+        <section class="panel output-panel"><div class="section-heading"><b>03</b><div><h2>Üretimin</h2><p>Görselin burada belirecek.</p></div></div><div class="output-stage"><div id="output-placeholder" class="output-placeholder"><i>✦</i><p>Yaratıcılığın için hazır</p></div><div id="generation-loading" class="generation-loading is-hidden"><span class="spinner"></span><p>Görselin üretiliyor...</p></div><img id="output-image" class="output-image is-hidden" alt="Üretilen görsel"></div></section>
+      </section>
+    </main>
+  </div>
+  <div id="videoPanel" class="app-panel" aria-live="polite">
+    <main class="studio video-studio">
+      <header class="hero"><span>HAREKETLİ YAPAY ZEKÂ</span><h1>AI Video Stüdyosu</h1><p>Modeli seç, sahneyi anlat, videonu üret.</p></header>
+      <section class="studio-grid">
+        <section class="panel">
+          <div class="section-heading"><b>01</b><div><h2>Video modeli ve fikir</h2><p>Görselini hareketli bir sahneye dönüştür.</p></div></div>
+          <label>Video modeli</label>
+          <div class="model-picker"><button type="button" class="model-picker-trigger" id="videoModelTrigger"><span id="videoModelTriggerLabel">Video modeli seçin</span><span class="model-picker-arrow">▾</span></button><ul class="model-picker-list" id="videoModelList" hidden></ul></div>
+          <label for="videoPromptInput">Prompt</label><textarea id="videoPromptInput" rows="5" placeholder="Videoda ne olmasını istersin?"></textarea>
+          <div id="videoReferenceSection" class="video-setting"><span id="videoReferenceLabel" class="aspect-label">Başlangıç görseli</span><label id="videoDropZone" class="drop-zone" for="videoReferenceInput"><input id="videoReferenceInput" type="file" accept="image/*" hidden><i>↥</i><strong>Görseli buraya bırak</strong><span>veya dosya seçmek için tıkla</span></label><div id="videoReferencePreview" class="video-reference-grid"></div></div>
+          <div class="video-setting"><span class="aspect-label">Çözünürlük</span><div id="videoResolutionOptions" class="aspect-options"></div></div>
+          <div class="video-setting"><span class="aspect-label">Süre</span><div id="videoDurationOptions" class="aspect-options"></div><div id="videoDurationRangeWrap" class="video-range-wrap is-hidden"><input id="videoDurationRange" type="range"><output id="videoDurationValue"></output></div></div>
+          <div id="videoAudioSetting" class="video-setting toggle-row is-hidden"><span>Ses üret</span><label class="toggle-switch"><input id="videoAudioToggle" type="checkbox"><span></span></label></div>
+          <div id="videoVoiceSetting" class="video-setting toggle-row is-hidden"><span>Voice control</span><label class="toggle-switch"><input id="videoVoiceToggle" type="checkbox"><span></span></label></div>
+          <p id="videoError" class="error-message" role="alert" hidden></p><p id="videoPrice" class="price-display is-hidden"></p><button id="generateVideoButton" class="generate-button" type="button">✦ Video Üret</button>
+        </section>
+        <section class="panel output-panel"><div class="section-heading"><b>02</b><div><h2>Videon</h2><p>Üretim tamamlandığında burada oynatılacak.</p></div></div><div class="output-stage video-output-stage"><div id="videoPlaceholder" class="output-placeholder"><i>✦</i><p>Harekete hazır</p></div><div id="videoLoading" class="generation-loading is-hidden"><span class="spinner"></span><p id="videoLoadingText">Video üretiliyor...</p></div><video id="videoOutput" class="video-output is-hidden" controls loop></video></div><p id="videoResultInfo" class="result-info is-hidden"></p></section>
+      </section>
+    </main>
+  </div>
+  <script src="/frontend/script.js"></script>
+  <script src="/frontend/video.js"></script>
+</body>
+</html>

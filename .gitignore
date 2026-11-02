@@ -1,0 +1,27 @@
+# Secrets and local configuration
+.env
+**/.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Runtime files
+*.log
+**/uploads/*
+!**/uploads/.gitkeep
+**/outputs/*
+!**/outputs/.gitkeep
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
